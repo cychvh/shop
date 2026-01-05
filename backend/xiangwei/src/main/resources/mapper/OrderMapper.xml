@@ -1,0 +1,46 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyc.xiangwei.mapper.OrderMapper">
+    <select id="findOrderWithItemsByProductName" resultType="com.cyc.xiangwei.bean.Order">
+        SELECT DISTINCT o.*
+        FROM `orders` o
+        JOIN order_item oi ON o.id = oi.order_id
+        JOIN product p ON oi.product_id = p.id
+        <where>
+            <if test="userId != null">
+                AND o.user_id = #{userId}
+            </if>
+            <if test="productName != null and productName != ''">
+                AND p.name LIKE concat('%', #{productName}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="getTopSellingProducts" resultType="com.cyc.xiangwei.bean.Product">
+        SELECT p.*, SUM(oi.quantity) as salesVolume
+        FROM order_item oi
+                 JOIN `orders` o ON oi.order_id = o.id
+                 JOIN product p ON oi.product_id = p.id
+        WHERE o.create_time >= #{startTime}
+          AND o.create_time &lt; #{endTime}
+        GROUP BY oi.product_id
+        ORDER BY salesVolume DESC
+            LIMIT 5
+    </select>
+    <!--<select id="findOrderWithItemsByProductNameMerchant" resultType="com.cyc.xiangwei.bean.Order">-->
+    <!--    SELECT DISTINCT o.-->
+    <!--    FROM `orders` o-->
+    <!--    JOIN order_item oi ON o.id = oi.order_id-->
+    <!--    JOIN product p ON oi.product_id = p.id-->
+    <!--    <where>-->
+    <!--        <if test="userId != null">-->
+    <!--            AND o.user_id = #{userId}-->
+    <!--        </if>-->
+    <!--        <if test="productName != null and productName != ''">-->
+    <!--            AND p.name LIKE concat('%', #{productName}, '%')-->
+    <!--        </if>-->
+    <!--    </where>-->
+    <!--</select>-->
+
+</mapper>

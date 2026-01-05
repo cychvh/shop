@@ -1,0 +1,15 @@
+server:
+  port: 9999
+spring:
+  datasource:
+    password: 123456
+    username: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/xiangwei?useUnicode=true&characterEncoding=utf-8&useSSL=true
+  mvc:
+    static-path-pattern: /uploads/**
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.cyc.xiangwei.bean
